@@ -3,7 +3,8 @@ let inputDir = { x: 0, y: 0 };
 const foodSound = new Audio('music/food.mp3');
 const gameOverSound = new Audio('music/gameover.mp3');
 const moveSound = new Audio('music/move.mp3');
-const musicSound = new Audio('music/music.mp3');
+// const musicSound = new Audio('music/music.mp3');
+const musicSound = new Audio('music/backgroundMusic.mp3');
 
 //mobile section starts
 document.addEventListener('touchstart', handleTouchStart, false);
@@ -22,7 +23,13 @@ function getTouches(evt) {
 function togglePausePlay() {
     gamePaused = !gamePaused
 
-    paused.innerHTML = score + gamePaused ? 'Game is Paused! Touch or Press P button to play' : '';
+    if (gamePaused) {
+        musicSound.pause();
+        paused.innerHTML = 'Game is Paused! Touch or Press P button to play';
+    } else {
+        musicSound.play();
+        paused.innerHTML = '';
+    }
 }
 
 function handleTouchStart(evt) {
@@ -179,7 +186,6 @@ function gameEngine() {
 
 
 // Main logic starts here
-// musicSound.play();
 let hiscore = localStorage.getItem("hiscore");
 if (hiscore === null) {
     hiscoreval = 0;
@@ -192,12 +198,12 @@ else {
 
 window.requestAnimationFrame(main);
 window.addEventListener('keydown', e => {
-    // inputDir = { x: 0, y: 1 } // Start the game
+    // inputDir = { x: 0, y: 1 } // Start the game  //commenting as it reset the position every pause play time
     if (!gamePaused) {
         paused.innerHTML = '';
+        musicSound.play();
     }
 
-    moveSound.play();
     console.log('e.key??', e.key)
     switch (e.key) {
         case "ArrowUp":
@@ -233,6 +239,11 @@ window.addEventListener('keydown', e => {
             break;
 
         case "p":
+            console.log("pause and play request.");
+            togglePausePlay()
+            break;
+
+        case "P":
             console.log("pause and play request.");
             togglePausePlay()
             break;
